@@ -1,9 +1,26 @@
 ---
-- name: Create Custom Network
-  gce_net:
-    name: customnet
-    mode: custom
-    subnet_name: "customsubnet"
-    subnet_region: us-east1
-    ipv4_range: '10.240.17.0/24'
-    state: "present"
+- hosts: all
+
+  vars: 
+    # web_title_iis: "{{ web_title_iis }}"
+    # welcome_msg: "{{ welcome_msg }}"
+    web_title_iis: 'Created by CloudForms using Ansible'
+    welcome_msg: 'Created by CloudForms using Ansible'
+    # ansible_connection: winrm
+    # ansible_winrm_server_cert_validation: ignore
+    proxy_url: "http://{{ http_proxy }}:{{ proxy_port }}"
+  
+  tasks:
+  - debug: var=proxy_url
+  # - debug: var=proxy_user
+  # - debug: var=proxy_password
+
+  - name: Enable IIS feature
+    win_feature:
+      name: Web-Server
+      state: present
+
+  - name: Create new home page
+    win_copy:
+      dest: C:\inetpub\wwwroot\index.html 
+      content: <html><head><title>{{ web_title_iis }}</title></head><body><img src="logo.png"></img><p>{{ welcome_msg }}</body></html>
