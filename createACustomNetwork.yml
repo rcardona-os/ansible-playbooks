@@ -1,5 +1,4 @@
-# Create a Custom Network
-
+---
 - name: Create Custom Network
   gce_net:
     name: customnet
